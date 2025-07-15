@@ -5,6 +5,12 @@ import json
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
+
+@api_bp.route('/health', methods=['GET'])
+def get_recipes():
+    return "OK"
+
+
 def verify_recipe_ingredients(recipes):
     """
     Verify that all recipes have valid ingredients from the catalog
