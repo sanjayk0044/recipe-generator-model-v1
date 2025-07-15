@@ -5,12 +5,6 @@ import json
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
-
-@api_bp.route('/health', methods=['GET'])
-def get_recipes():
-    return "OK"
-
-
 def verify_recipe_ingredients(recipes):
     """
     Verify that all recipes have valid ingredients from the catalog
@@ -54,7 +48,11 @@ def verify_recipe_ingredients(recipes):
     
     return verified_recipes
 
-@api_bp.route('/recipes', methods=['POST'])
+@api_bp.route('/health', methods=['GET'])
+def get_health():
+    return 'Ok'
+
+@api_bp.route('/recipes', methods=['POST'], endpoint='create_recipes')
 def create_recipes():
     """
     POST endpoint to generate recipes based on user preferences
@@ -70,27 +68,6 @@ def create_recipes():
         preferences = request.get_json() or {}
         
         # Generate recipes
-        recipes = generate_recipes(preferences)
-        
-        # Return recipes without verification
-        return jsonify(recipes), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-# Keep the GET endpoint for backward compatibility
-@api_bp.route('/recipes', methods=['GET'])
-def get_recipes():
-    """
-    GET endpoint to generate recipes based on user preferences (deprecated)
-    
-    Query parameters:
-    - preferences: JSON string containing user preferences
-    
-    Returns:
-    - JSON response with generated recipes
-    """
-    try:
-        preferences = request.args.get('preferences', '{}')
         recipes = generate_recipes(preferences)
         
         # Return recipes without verification
